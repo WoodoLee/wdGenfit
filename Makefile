@@ -48,10 +48,10 @@ RM = /usr/local/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/wdlee/Jobs/hep/genfit2g2
+CMAKE_SOURCE_DIR = /home/wdlee/ssd1/work/github/wdGenfit
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/wdlee/Jobs/hep/genfit2g2
+CMAKE_BINARY_DIR = /home/wdlee/ssd1/work/github/wdGenfit
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,50 +68,6 @@ install/strip/fast: preinstall/fast
 	/usr/local/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
 .PHONY : install/strip/fast
 
-# Special rule for the target install
-install: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/local/bin/cmake -P cmake_install.cmake
-.PHONY : install
-
-# Special rule for the target install
-install/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/local/bin/cmake -P cmake_install.cmake
-.PHONY : install/fast
-
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
-
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/local/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/local/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target install/local
 install/local: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
@@ -124,11 +80,55 @@ install/local/fast: preinstall/fast
 	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local/fast
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/local/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/local/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/local/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/local/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/wdlee/Jobs/hep/genfit2g2/CMakeFiles /home/wdlee/Jobs/hep/genfit2g2/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/wdlee/ssd1/work/github/wdGenfit/CMakeFiles /home/wdlee/ssd1/work/github/wdGenfit/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/wdlee/Jobs/hep/genfit2g2/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/wdlee/ssd1/work/github/wdGenfit/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -170,19 +170,6 @@ genfitg2/fast:
 .PHONY : genfitg2/fast
 
 #=============================================================================
-# Target rules for targets named tests
-
-# Build rule for target.
-tests: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 tests
-.PHONY : tests
-
-# fast build rule for target.
-tests/fast:
-	$(MAKE) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/build
-.PHONY : tests/fast
-
-#=============================================================================
 # Target rules for targets named g2trackGenfit
 
 # Build rule for target.
@@ -196,95 +183,108 @@ g2trackGenfit/fast:
 .PHONY : g2trackGenfit/fast
 
 #=============================================================================
-# Target rules for targets named generate_homewdleeJobshepgenfit2g2utilitiesRootDict.cc
+# Target rules for targets named generate_homewdleessd1workgithubwdGenfitutilitiesRootDict.cc
 
 # Build rule for target.
-generate_homewdleeJobshepgenfit2g2utilitiesRootDict.cc: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleeJobshepgenfit2g2utilitiesRootDict.cc
-.PHONY : generate_homewdleeJobshepgenfit2g2utilitiesRootDict.cc
+generate_homewdleessd1workgithubwdGenfitutilitiesRootDict.cc: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleessd1workgithubwdGenfitutilitiesRootDict.cc
+.PHONY : generate_homewdleessd1workgithubwdGenfitutilitiesRootDict.cc
 
 # fast build rule for target.
-generate_homewdleeJobshepgenfit2g2utilitiesRootDict.cc/fast:
-	$(MAKE) -f CMakeFiles/generate_homewdleeJobshepgenfit2g2utilitiesRootDict.cc.dir/build.make CMakeFiles/generate_homewdleeJobshepgenfit2g2utilitiesRootDict.cc.dir/build
-.PHONY : generate_homewdleeJobshepgenfit2g2utilitiesRootDict.cc/fast
+generate_homewdleessd1workgithubwdGenfitutilitiesRootDict.cc/fast:
+	$(MAKE) -f CMakeFiles/generate_homewdleessd1workgithubwdGenfitutilitiesRootDict.cc.dir/build.make CMakeFiles/generate_homewdleessd1workgithubwdGenfitutilitiesRootDict.cc.dir/build
+.PHONY : generate_homewdleessd1workgithubwdGenfitutilitiesRootDict.cc/fast
 
 #=============================================================================
-# Target rules for targets named generate_homewdleeJobshepgenfit2g2coreRootDict.cc
+# Target rules for targets named generate_homewdleessd1workgithubwdGenfitcoreRootDict.cc
 
 # Build rule for target.
-generate_homewdleeJobshepgenfit2g2coreRootDict.cc: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleeJobshepgenfit2g2coreRootDict.cc
-.PHONY : generate_homewdleeJobshepgenfit2g2coreRootDict.cc
+generate_homewdleessd1workgithubwdGenfitcoreRootDict.cc: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleessd1workgithubwdGenfitcoreRootDict.cc
+.PHONY : generate_homewdleessd1workgithubwdGenfitcoreRootDict.cc
 
 # fast build rule for target.
-generate_homewdleeJobshepgenfit2g2coreRootDict.cc/fast:
-	$(MAKE) -f CMakeFiles/generate_homewdleeJobshepgenfit2g2coreRootDict.cc.dir/build.make CMakeFiles/generate_homewdleeJobshepgenfit2g2coreRootDict.cc.dir/build
-.PHONY : generate_homewdleeJobshepgenfit2g2coreRootDict.cc/fast
+generate_homewdleessd1workgithubwdGenfitcoreRootDict.cc/fast:
+	$(MAKE) -f CMakeFiles/generate_homewdleessd1workgithubwdGenfitcoreRootDict.cc.dir/build.make CMakeFiles/generate_homewdleessd1workgithubwdGenfitcoreRootDict.cc.dir/build
+.PHONY : generate_homewdleessd1workgithubwdGenfitcoreRootDict.cc/fast
 
 #=============================================================================
-# Target rules for targets named generate_homewdleeJobshepgenfit2g2measurementsRootDict.cc
+# Target rules for targets named generate_homewdleessd1workgithubwdGenfiteventDisplayRootDict.cc
 
 # Build rule for target.
-generate_homewdleeJobshepgenfit2g2measurementsRootDict.cc: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleeJobshepgenfit2g2measurementsRootDict.cc
-.PHONY : generate_homewdleeJobshepgenfit2g2measurementsRootDict.cc
+generate_homewdleessd1workgithubwdGenfiteventDisplayRootDict.cc: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleessd1workgithubwdGenfiteventDisplayRootDict.cc
+.PHONY : generate_homewdleessd1workgithubwdGenfiteventDisplayRootDict.cc
 
 # fast build rule for target.
-generate_homewdleeJobshepgenfit2g2measurementsRootDict.cc/fast:
-	$(MAKE) -f CMakeFiles/generate_homewdleeJobshepgenfit2g2measurementsRootDict.cc.dir/build.make CMakeFiles/generate_homewdleeJobshepgenfit2g2measurementsRootDict.cc.dir/build
-.PHONY : generate_homewdleeJobshepgenfit2g2measurementsRootDict.cc/fast
+generate_homewdleessd1workgithubwdGenfiteventDisplayRootDict.cc/fast:
+	$(MAKE) -f CMakeFiles/generate_homewdleessd1workgithubwdGenfiteventDisplayRootDict.cc.dir/build.make CMakeFiles/generate_homewdleessd1workgithubwdGenfiteventDisplayRootDict.cc.dir/build
+.PHONY : generate_homewdleessd1workgithubwdGenfiteventDisplayRootDict.cc/fast
 
 #=============================================================================
-# Target rules for targets named generate_homewdleeJobshepgenfit2g2fittersRootDict.cc
+# Target rules for targets named generate_homewdleessd1workgithubwdGenfitfittersRootDict.cc
 
 # Build rule for target.
-generate_homewdleeJobshepgenfit2g2fittersRootDict.cc: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleeJobshepgenfit2g2fittersRootDict.cc
-.PHONY : generate_homewdleeJobshepgenfit2g2fittersRootDict.cc
+generate_homewdleessd1workgithubwdGenfitfittersRootDict.cc: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleessd1workgithubwdGenfitfittersRootDict.cc
+.PHONY : generate_homewdleessd1workgithubwdGenfitfittersRootDict.cc
 
 # fast build rule for target.
-generate_homewdleeJobshepgenfit2g2fittersRootDict.cc/fast:
-	$(MAKE) -f CMakeFiles/generate_homewdleeJobshepgenfit2g2fittersRootDict.cc.dir/build.make CMakeFiles/generate_homewdleeJobshepgenfit2g2fittersRootDict.cc.dir/build
-.PHONY : generate_homewdleeJobshepgenfit2g2fittersRootDict.cc/fast
+generate_homewdleessd1workgithubwdGenfitfittersRootDict.cc/fast:
+	$(MAKE) -f CMakeFiles/generate_homewdleessd1workgithubwdGenfitfittersRootDict.cc.dir/build.make CMakeFiles/generate_homewdleessd1workgithubwdGenfitfittersRootDict.cc.dir/build
+.PHONY : generate_homewdleessd1workgithubwdGenfitfittersRootDict.cc/fast
 
 #=============================================================================
-# Target rules for targets named generate_homewdleeJobshepgenfit2g2eventDisplayRootDict.cc
+# Target rules for targets named generate_homewdleessd1workgithubwdGenfitmeasurementsRootDict.cc
 
 # Build rule for target.
-generate_homewdleeJobshepgenfit2g2eventDisplayRootDict.cc: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleeJobshepgenfit2g2eventDisplayRootDict.cc
-.PHONY : generate_homewdleeJobshepgenfit2g2eventDisplayRootDict.cc
+generate_homewdleessd1workgithubwdGenfitmeasurementsRootDict.cc: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleessd1workgithubwdGenfitmeasurementsRootDict.cc
+.PHONY : generate_homewdleessd1workgithubwdGenfitmeasurementsRootDict.cc
 
 # fast build rule for target.
-generate_homewdleeJobshepgenfit2g2eventDisplayRootDict.cc/fast:
-	$(MAKE) -f CMakeFiles/generate_homewdleeJobshepgenfit2g2eventDisplayRootDict.cc.dir/build.make CMakeFiles/generate_homewdleeJobshepgenfit2g2eventDisplayRootDict.cc.dir/build
-.PHONY : generate_homewdleeJobshepgenfit2g2eventDisplayRootDict.cc/fast
+generate_homewdleessd1workgithubwdGenfitmeasurementsRootDict.cc/fast:
+	$(MAKE) -f CMakeFiles/generate_homewdleessd1workgithubwdGenfitmeasurementsRootDict.cc.dir/build.make CMakeFiles/generate_homewdleessd1workgithubwdGenfitmeasurementsRootDict.cc.dir/build
+.PHONY : generate_homewdleessd1workgithubwdGenfitmeasurementsRootDict.cc/fast
 
 #=============================================================================
-# Target rules for targets named generate_homewdleeJobshepgenfit2g2GBLRootDict.cc
+# Target rules for targets named generate_homewdleessd1workgithubwdGenfitGBLRootDict.cc
 
 # Build rule for target.
-generate_homewdleeJobshepgenfit2g2GBLRootDict.cc: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleeJobshepgenfit2g2GBLRootDict.cc
-.PHONY : generate_homewdleeJobshepgenfit2g2GBLRootDict.cc
+generate_homewdleessd1workgithubwdGenfitGBLRootDict.cc: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleessd1workgithubwdGenfitGBLRootDict.cc
+.PHONY : generate_homewdleessd1workgithubwdGenfitGBLRootDict.cc
 
 # fast build rule for target.
-generate_homewdleeJobshepgenfit2g2GBLRootDict.cc/fast:
-	$(MAKE) -f CMakeFiles/generate_homewdleeJobshepgenfit2g2GBLRootDict.cc.dir/build.make CMakeFiles/generate_homewdleeJobshepgenfit2g2GBLRootDict.cc.dir/build
-.PHONY : generate_homewdleeJobshepgenfit2g2GBLRootDict.cc/fast
+generate_homewdleessd1workgithubwdGenfitGBLRootDict.cc/fast:
+	$(MAKE) -f CMakeFiles/generate_homewdleessd1workgithubwdGenfitGBLRootDict.cc.dir/build.make CMakeFiles/generate_homewdleessd1workgithubwdGenfitGBLRootDict.cc.dir/build
+.PHONY : generate_homewdleessd1workgithubwdGenfitGBLRootDict.cc/fast
 
 #=============================================================================
-# Target rules for targets named generate_homewdleeJobshepgenfit2g2trackRepsRootDict.cc
+# Target rules for targets named tests
 
 # Build rule for target.
-generate_homewdleeJobshepgenfit2g2trackRepsRootDict.cc: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleeJobshepgenfit2g2trackRepsRootDict.cc
-.PHONY : generate_homewdleeJobshepgenfit2g2trackRepsRootDict.cc
+tests: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests
+.PHONY : tests
 
 # fast build rule for target.
-generate_homewdleeJobshepgenfit2g2trackRepsRootDict.cc/fast:
-	$(MAKE) -f CMakeFiles/generate_homewdleeJobshepgenfit2g2trackRepsRootDict.cc.dir/build.make CMakeFiles/generate_homewdleeJobshepgenfit2g2trackRepsRootDict.cc.dir/build
-.PHONY : generate_homewdleeJobshepgenfit2g2trackRepsRootDict.cc/fast
+tests/fast:
+	$(MAKE) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/build
+.PHONY : tests/fast
+
+#=============================================================================
+# Target rules for targets named generate_homewdleessd1workgithubwdGenfittrackRepsRootDict.cc
+
+# Build rule for target.
+generate_homewdleessd1workgithubwdGenfittrackRepsRootDict.cc: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 generate_homewdleessd1workgithubwdGenfittrackRepsRootDict.cc
+.PHONY : generate_homewdleessd1workgithubwdGenfittrackRepsRootDict.cc
+
+# fast build rule for target.
+generate_homewdleessd1workgithubwdGenfittrackRepsRootDict.cc/fast:
+	$(MAKE) -f CMakeFiles/generate_homewdleessd1workgithubwdGenfittrackRepsRootDict.cc.dir/build.make CMakeFiles/generate_homewdleessd1workgithubwdGenfittrackRepsRootDict.cc.dir/build
+.PHONY : generate_homewdleessd1workgithubwdGenfittrackRepsRootDict.cc/fast
 
 GBL/src/BorderedBandMatrix.o: GBL/src/BorderedBandMatrix.cc.o
 
@@ -1474,32 +1474,32 @@ fittersRootDict.cc.s:
 	$(MAKE) -f CMakeFiles/g2trackGenfit.dir/build.make CMakeFiles/g2trackGenfit.dir/fittersRootDict.cc.s
 .PHONY : fittersRootDict.cc.s
 
-main/g2fitmain.o: main/g2fitmain.cc.o
+main/g2WDfitmain.o: main/g2WDfitmain.cc.o
 
-.PHONY : main/g2fitmain.o
+.PHONY : main/g2WDfitmain.o
 
 # target to build an object file
-main/g2fitmain.cc.o:
-	$(MAKE) -f CMakeFiles/genfitg2.dir/build.make CMakeFiles/genfitg2.dir/main/g2fitmain.cc.o
-.PHONY : main/g2fitmain.cc.o
+main/g2WDfitmain.cc.o:
+	$(MAKE) -f CMakeFiles/genfitg2.dir/build.make CMakeFiles/genfitg2.dir/main/g2WDfitmain.cc.o
+.PHONY : main/g2WDfitmain.cc.o
 
-main/g2fitmain.i: main/g2fitmain.cc.i
+main/g2WDfitmain.i: main/g2WDfitmain.cc.i
 
-.PHONY : main/g2fitmain.i
+.PHONY : main/g2WDfitmain.i
 
 # target to preprocess a source file
-main/g2fitmain.cc.i:
-	$(MAKE) -f CMakeFiles/genfitg2.dir/build.make CMakeFiles/genfitg2.dir/main/g2fitmain.cc.i
-.PHONY : main/g2fitmain.cc.i
+main/g2WDfitmain.cc.i:
+	$(MAKE) -f CMakeFiles/genfitg2.dir/build.make CMakeFiles/genfitg2.dir/main/g2WDfitmain.cc.i
+.PHONY : main/g2WDfitmain.cc.i
 
-main/g2fitmain.s: main/g2fitmain.cc.s
+main/g2WDfitmain.s: main/g2WDfitmain.cc.s
 
-.PHONY : main/g2fitmain.s
+.PHONY : main/g2WDfitmain.s
 
 # target to generate assembly for a file
-main/g2fitmain.cc.s:
-	$(MAKE) -f CMakeFiles/genfitg2.dir/build.make CMakeFiles/genfitg2.dir/main/g2fitmain.cc.s
-.PHONY : main/g2fitmain.cc.s
+main/g2WDfitmain.cc.s:
+	$(MAKE) -f CMakeFiles/genfitg2.dir/build.make CMakeFiles/genfitg2.dir/main/g2WDfitmain.cc.s
+.PHONY : main/g2WDfitmain.cc.s
 
 measurements/src/FullMeasurement.o: measurements/src/FullMeasurement.cc.o
 
@@ -2129,21 +2129,21 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... install/strip"
-	@echo "... install"
+	@echo "... install/local"
 	@echo "... list_install_components"
-	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... genfitg2"
-	@echo "... tests"
 	@echo "... g2trackGenfit"
-	@echo "... generate_homewdleeJobshepgenfit2g2utilitiesRootDict.cc"
-	@echo "... install/local"
-	@echo "... generate_homewdleeJobshepgenfit2g2coreRootDict.cc"
-	@echo "... generate_homewdleeJobshepgenfit2g2measurementsRootDict.cc"
-	@echo "... generate_homewdleeJobshepgenfit2g2fittersRootDict.cc"
-	@echo "... generate_homewdleeJobshepgenfit2g2eventDisplayRootDict.cc"
-	@echo "... generate_homewdleeJobshepgenfit2g2GBLRootDict.cc"
-	@echo "... generate_homewdleeJobshepgenfit2g2trackRepsRootDict.cc"
+	@echo "... generate_homewdleessd1workgithubwdGenfitutilitiesRootDict.cc"
+	@echo "... rebuild_cache"
+	@echo "... generate_homewdleessd1workgithubwdGenfitcoreRootDict.cc"
+	@echo "... install"
+	@echo "... generate_homewdleessd1workgithubwdGenfiteventDisplayRootDict.cc"
+	@echo "... generate_homewdleessd1workgithubwdGenfitfittersRootDict.cc"
+	@echo "... generate_homewdleessd1workgithubwdGenfitmeasurementsRootDict.cc"
+	@echo "... generate_homewdleessd1workgithubwdGenfitGBLRootDict.cc"
+	@echo "... tests"
+	@echo "... generate_homewdleessd1workgithubwdGenfittrackRepsRootDict.cc"
 	@echo "... GBL/src/BorderedBandMatrix.o"
 	@echo "... GBL/src/BorderedBandMatrix.i"
 	@echo "... GBL/src/BorderedBandMatrix.s"
@@ -2276,9 +2276,9 @@ help:
 	@echo "... fittersRootDict.o"
 	@echo "... fittersRootDict.i"
 	@echo "... fittersRootDict.s"
-	@echo "... main/g2fitmain.o"
-	@echo "... main/g2fitmain.i"
-	@echo "... main/g2fitmain.s"
+	@echo "... main/g2WDfitmain.o"
+	@echo "... main/g2WDfitmain.i"
+	@echo "... main/g2WDfitmain.s"
 	@echo "... measurements/src/FullMeasurement.o"
 	@echo "... measurements/src/FullMeasurement.i"
 	@echo "... measurements/src/FullMeasurement.s"

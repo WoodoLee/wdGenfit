@@ -1,8 +1,0 @@
-{ decls }
-namespace genfit {  }
-
-[ libg2trackGenfit.so ]
-# List of selected classes
-class genfit::RKTrackRep
-# List of selected namespaces
-namespace genfit

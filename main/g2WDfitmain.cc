@@ -116,14 +116,11 @@ int main()
   // init MeasurementCreator
   genfit::MeasurementCreator measurementCreator;
   // init geometry and mag. field
-  TString fileData = "/home/wdlee/ssd1/work/build/sysg2wd_build/g2wd100k.root";
-  //TString fileData = "./testOut10k.root";
-  TString fileGeom = "/home/wdlee/ssd1/work/build/sysg2wd_build/g2wdGeom.gdml";
-  //TString fileGeom = "./Detector.root";
+  TString fileData = "/home/wdlee/Work/build/geant4/g2wdsys_build/g2wd.root";
+  TString fileGeom = "/home/wdlee/Work/build/geant4/g2wdsys_build/g2wdGeom.gdml";
   new TGeoManager("Geometry", "Geane geometry");
   TGeoManager::Import(fileGeom.Data());
   genfit::FieldManager::getInstance()->init(new genfit::ConstField(0.,0., BZ)); // BZ kGauss
-  genfit::MaterialEffects::getInstance()->init(new genfit::TGeoMaterialInterface());
   genfit::MaterialEffects *mateff = genfit::MaterialEffects::getInstance();
   mateff->setEnergyLossBrems(true);
   mateff->setNoiseBrems(true);
@@ -160,12 +157,14 @@ int main()
   int nMaxFailed(-1);
   //bool refit(false);
   //bool  squareRootFormalism(false);
+
   fitter->setMinIterations(nMinIter);
   fitter->setMaxIterations(nMaxIter);
   fitter->setRelChi2Change(dRelChi2);
   fitter->setMaxFailedHits(nMaxFailed);
 
-  const bool debug =  true; //false;
+
+  //const bool debug =  true; //false;
   //if (debug)
   //fitter->setDebugLvl(10);
   // create histograms
@@ -173,92 +172,55 @@ int main()
   //gStyle->SetPalette(1);
   //gStyle->SetOptFit(1111);
   int nbin1 =150; //500
-  //int nbin2 =200; //200
   double mRr = 1;
-  //double mRrC = 0.3;
   double mDr = 300;
-  //double mDrC = 300;
-  //TH1D *hmomB = new TH1D("All","Momentum Distribution before",nbin1, 0 , 300);
-  //TH1D *hmomA = new TH1D("All","Momentum Distribution After",nbin1, 0 , 300);
-  //TH1D *hmomE = new TH1D("All","Efficiency of convergence",nbin1, 0 , 300);
-  TH1D *hmomResAll = new TH1D("All","Momentum Resolution",nbin1, -mRr , mRr);
-  TH1D *hmomResMomCut = new TH1D("Momcut","Momentum Resolution momCut",nbin1, -mRr , mRr);
-  TH1D *hmomResCut = new TH1D("ResCut","Momentum Resolution Cut",nbin1, -mRr , mRr);
-  TH1D *hmomDiffAll = new TH1D("All","Momentum Difference",nbin1, -mDr , mDr);
-  TH1D *hmomDiffMomCut = new TH1D("MomCut","Momentum Difference momCut",nbin1, -mDr , mDr);
-  TH1D *hmomDiffCut = new TH1D("DiffCut","Momentum Difference Cut",nbin1, -mDr , mDr);
+  TH1D *hmomResAllTest     = new TH1D("All","Momentum Resolution",nbin1, -mRr , mRr);
+  TH1D *hmomResMomCutTest  = new TH1D("Momcut","Momentum Resolution momCut",nbin1, -mRr , mRr);
+  TH1D *hmomResCutTest     = new TH1D("ResCut","Momentum Resolution Cut",nbin1, -mRr , mRr);
+  TH1D *hmomDiffAllTest    = new TH1D("All","Momentum Difference",nbin1, -mDr , mDr);
+  TH1D *hmomDiffMomCutTest = new TH1D("MomCut","Momentum Difference momCut",nbin1, -mDr , mDr);
+  TH1D *hmomDiffCutTest    = new TH1D("DiffCut","Momentum Difference Cut",nbin1, -mDr , mDr);
   
-  //double momRange = 300.;
-  //int window = 100;
-  //double windowRange = momRange / window;
-  //TH1D *hmomRes[window];
-  //TH1D *hmomResCut[window];
-  //TH1D *hmomDiff[window];
-  //TH1D *hmomDiffCut[window];
-  //TH1D *hmomSig[window];
-  //TString name;
-  //TString title;
+  double momRange = 300.;
+  int window = 100;
+  double windowRange = momRange / window;
+  TH1D *hmomRes[window];
+  TH1D *hmomResCut[window];
+  TH1D *hmomDiff[window];
+  TH1D *hmomDiffCut[window];
+  TH1D *hmomSig[window];
+  TString name;
+  TString title;
   
-  //for(int i=0; i < window; i++)
-  //{
-  //  double rangeMin = i *  windowRange ;
-  //  double rangeMax = (i+1) * windowRange ;
-  //  title . Form("%i MeV < P_{Initial} < %i + 3 MeV/c", rangeMin);
-  //  hmomRes[i]     = new TH1D(title . Data() , "Momentum Resolution",nbin1, -mRr , mRr);
-  //  hmomResCut[i]  = new TH1D(title . Data() , "Momentum Resolution Cut",nbin1, -mRr , mRr);
-  //  hmomDiff[i]    = new TH1D(title . Data() , "Momentum Difference",nbin1, -mDr , mDr);
-  //  hmomDiffCut[i] = new TH1D(title . Data() , "Momentum Difference Cut",nbin1, -mDr , mDr);
-  //  hmomSig[i]     = new TH1D(title . Data() , "Momentum Difference / true Momentum",nbin1, -mDr , mDr);
-  //}
-  //TH1D *hmomResO200 = new TH1D("200 MeV/c < P_{Initial} < 275 MeV/c","Momentum Resolution",nbin1*5, -mRr , mRr);
-  //TH1D *hmomResCutO200 = new TH1D("200MeV/c P_{Initial} < 275 MeV/c","Momentum Resolution Cut < 0.3",nbin1, -mRrC , mRrC);
-  //TH1D *hmomDiffO200 = new TH1D("P_{Initial} > 200 MeV/c","Momentum Difference",750, -mDr , mDr);
-  //TH1D *hmomDiffCutO200 = new TH1D("P_{Initial} > 200 MeV/c","Momentum Difference Cut Resolution < 0.2",150, -mDrC , mDrC);
-  //TH1D *hmomResO200fit = new TH1D(" P_{Initial} > 200 MeV/c","Momentum Resolution",nbin1, -1 , 1);
-  //TH1D *hmomResCutO200fit = new TH1D("P_{Initial} > 200 MeV/c","Momentum Resolution Cut < 0.2",nbin1, -0.5 , 0.5);
-  //TH1D *hmomDiffO200fit = new TH1D("P_{Initial} > 200 MeV/c","Momentum Difference",nbin1, -10 , 10);
-  //TH1D *hmomDiffCutO200fit = new TH1D("P_{Initial} > 200 MeV/c","Momentum Difference Cut Resolution < 0.2",nbin1, -10 , 10);
-  //TH1D *hmoms = new TH1D(" p_{Fitting} ","  p_{Fitting} Distribution , ALL [MeV/c]",nbin1, -300 , 300);
-  //TH1D *hmomref = new TH1D(" p_{Initial} "," p_{Initial} Distribution , ALL [MeV/c]",nbin1, -300 , 300);
-  //TH1D *hmomsCut   = new TH1D(" p_{Fitting} ","  p_{Fitting} Distribution, p_{Initial} > 200 MeV/c  [MeV/c]",nbin1, -300 , 300);
-  //TH1D *hmomrefCut = new TH1D(" p_{Initial} "," p_{Initial} Distribution, p_{Initial} > 200 MeV/c [MeV/c]",nbin1, -300 , 300);
-  //TH1D *hmomNeg       = new TH1D(" p_{Fitting} ","  p_{Fitting} Distribution, p_{Fitting} < 0 MeV/c  [MeV/c]",nbin1, -300 , 0); 
-  //TH1D *hmomrefNeg    = new TH1D(" p_{Initial} "," p_{Initial} Distribution, p_{Fitting} < 0 MeV/c [MeV/c]",nbin1, 0 , 300);
-  //TH1D *hmomdiffNeg   = new TH1D(" p_{difference} ","  p_{difference} Distribution, p_{Fitting} < 0 MeV/c  [MeV/c]",nbin1, -300 , 0); 
-  //TH1D *hmomLow       = new TH1D(" p_{low} ","  p_{low} Distribution, p_{low} < 150 MeV/c  [MeV/c]",nbin1, 0 , 300); 
-  //TH2D *hmomshit = new TH2D("ALL", "mom vs # of hits", nbin1, 0, 300, nbin1/2, 0, 100);
-  //TH1D *hmomcheck = new TH1D(" p val = 0 "," Mom diff. p val =0  [MeV/c]",nbin1, -150 , 150);
-  ////2D his 
-  //TH2D *hChiRes = new TH2D("All","Chi2/Ndf vs Mom resolution", nbin1, 0 , 10 , nbin1, -10 , 10);
-  //TH2D *hChiRes200 = new TH2D("All","Chi2/Ndf vs Mom resolution mom 200", nbin1, 0 , 10 , nbin1, -10 , 10);
-  
-  //double Eff[window];
-  //double EffO200 = 0.;
-  //double posiNum[window];
-  //double posiNumAll = 0.;
-  //double posiNumFit[window];
-  //double momSig[window];
+  for(int i=0; i < window; i++)
+  {
+    double rangeMin = i *  windowRange ;
+    double rangeMax = (i+1) * windowRange ;
+    title . Form("%i MeV < P_{Initial} < %i + 3 MeV/c", rangeMin);
+    hmomRes[i]     = new TH1D(title . Data() , "Momentum Resolution",nbin1, -mRr , mRr);
+    hmomResCut[i]  = new TH1D(title . Data() , "Momentum Resolution Cut",nbin1, -mRr , mRr);
+    hmomDiff[i]    = new TH1D(title . Data() , "Momentum Difference",nbin1, -mDr , mDr);
+    hmomDiffCut[i] = new TH1D(title . Data() , "Momentum Difference Cut",nbin1, -mDr , mDr);
+    hmomSig[i]     = new TH1D(title . Data() , "Momentum Difference / true Momentum",nbin1, -mDr , mDr);
+  }
+ 
+  double Eff[window];
+  double EffO200 = 0.;
+  double posiNum[window];
+  double posiNumAll = 0.;
+  double posiNumFit[window];
+  double momSig[window];
 
-  //TH1D *pVal = new TH1D("pVal","p-value",nbin2,0.,1.);
-  //TH1D *chI2 = new TH1D("chI2","chi sqare",nbin2,0,100);
-  //TH1D *Ndf = new TH1D("NDF","NDF",50,0,100);
-  //TH1D *chI2N = new TH1D("chi2/NDF","chi2/NDF",nbin2,0,10);
-  //TH1D *covFx  = new TH1D("Final Covariance X ","Final Cov",nbin1,0,0.2);
-  //TH1D *covFy  = new TH1D("Final Covariance Y ","Final Cov",nbin1,0,0.2);
-  //TH1D *covFz  = new TH1D("Final Covariance Z","Final Cov",nbin1,0,0.2);
-  //TH1D *covFpos  = new TH1D("Final Covariance Pos","Final Pos Cov",nbin1,0,0.2);
-  //TH1D *covFpx  = new TH1D("Final Covariance Px","Final Cov",nbin1,0,1);
-  //TH1D *covFpy  = new TH1D("Final Covariance Py","Final Cov",nbin1,0,1);
-  //TH1D *covFpz  = new TH1D("Final Covariance Pz","Final Cov",nbin1,0,1);
-  //TH1D *covFmom  = new TH1D("Final Covariance Momentum","Final Mom Cov",nbin1,0,1);
-  //TH1D *weights = new TH1D("weights","Daf vs true weights",500,-1.01,1.01);
-  //TFile* f = new TFile("FittingResult.root","recreate");
-  //TTree *tr= new TTree("data", "data");
-  //double momInit, momFitted , momDiff, momRes;
-  //tr -> Branch ("momInit",  &momInit , "momInit/D");
-  //tr -> Branch ("momFitted" ,  &momFitted  , "momFittied/D");
-  //tr -> Branch ("momDiff" ,  &momDiff  , "momDiff/D");
-  //tr -> Branch ("momRes" ,  &momRes  , "momRes/D");
+  TFile* f = new TFile("FittingResult.root","recreate");
+  TTree *tr= new TTree("data", "data");
+  
+  double momInit, momFitted , momDiff, momRes;
+  
+  tr -> Branch ("momInit",  &momInit , "momInit/D");
+  tr -> Branch ("momFitted" ,  &momFitted  , "momFittied/D");
+  tr -> Branch ("momDiff" ,  &momDiff  , "momDiff/D");
+  tr -> Branch ("momRes" ,  &momRes  , "momRes/D");
+  
   TFile* file = new TFile(fileData.Data());
   std::cout << "\033[1;32m [Notice] File " << fileData.Data() << " is open.\033[0m" << std::endl;
   TTree *treeHit = (TTree*)(file->Get("Hit"));
@@ -362,14 +324,14 @@ int main()
     }
   }
   int trackN = hitX.size();
-  for (int i = 0; i < 10; i++)
-  {
-    std::cout << "\033[1;37m [Notice] Track [ " << i << " ]  \033[0m" << std::endl;
-    for (int j = 0; j < hitX[i].size(); j++)
-    {
-      std::cout << "\033[1;36m [Notice] hit  [ " << hitX[i][j] <<", " <<  hitY[i][j] << "," << hitZ[i][j]  << " ]  \033[0m" << std::endl;
-    }
-  }
+  //for (int i = 0; i < 10; i++)
+  //{
+  //  //std::cout << "\033[1;37m [Notice] Track [ " << i << " ]  \033[0m" << std::endl;
+  //  for (int j = 0; j < hitX[i].size(); j++)
+  //  {
+  //    //std::cout << "\033[1;36m [Notice] hit  [ " << hitX[i][j] <<", " <<  hitY[i][j] << "," << hitZ[i][j]  << " ]  \033[0m" << std::endl;
+  //  }
+  //}
   
   // Looping over entries
   std::cout << "\033[1;31m [Notice] " << trackN << " number of Tracks. \033[0m" << std::endl;
@@ -384,17 +346,15 @@ int main()
     //chekc the real Hit number ;
     //set the initial state(for Kalman filter step 0) Units: cm / GeV/c
     //std::cout << "\033[1;35m [Notice] Initial Condition [ " << i << " ] is being fitted. \033[0m" << std::endl;
-    TVector3 pos( hitX[i][0] * 0.1  , hitY[i][0] * 0.1    , hitZ[i][0] * 0.1  );
-    TVector3 mom( momX[i][0] *0.001 , momY[i][0] *0.001  , momZ[i][0] * 0.001 );
+    TVector3 pos( hitX[i][0] / 10.  , hitY[i][0] / 10.    , hitZ[i][1] / 10.  );
+    TVector3 mom( momX[i][0] / 1000. , momY[i][0] / 1000.  , momZ[i][1] / 1000. );
     //pos.Print();
-    //if (mom.Mag()*1000 < 200. | mom.Mag()*1000 > 275.) continue; 
-    std::cout << "\033[1;32m [Notice] momMag [ " << mom.Mag() * 1000 << " ] MeV/c \033[0m" << std::endl;
+    //mom.Print();
     //Calculate the Magnitude of Initial momentum - will be use in Momentum cutting
     double momMag = mom.Mag();
     //mom.Print();
     const int pdg = pdgWanted ;     // particle pdg
     //const double charge = TDatabasePDG::Instance()->GetParticle(pdg)->Charge()/(3.);
-    //const double charge = TDatabasePDG::Instance()->GetParticle(pdg)->Charge();
     //genfit::HelixTrackModel* helix = new genfit::HelixTrackModel(pos, mom, charge);
     //measurementCreator.setTrackModel(helix);
     //get the charge : why devide by 3? - Curious(from Dasilva) 
@@ -408,8 +368,8 @@ int main()
     const double momSmear = 0.019;     // rad
     //const double momMagSmear = 0.019;   // relative
     //hmomshit -> Fill( momMag* 1000. , countHits);
-    TVector3 posM = pos;
-    TVector3 momM = mom;
+    TVector3 posM(pos);
+    TVector3 momM(mom);
     if (smearPosMom)
     {
       posM.SetX(gRandom->Gaus(posM.X(),posSmear));
@@ -422,7 +382,7 @@ int main()
     // approximate covariance(Kalman filter step.1)
 
     int nHits = hitX[i].size();
-    if (nHits ==0) continue;
+    //if (nHits ==0) continue;
 
     TMatrixDSym covM(6);
     for (int k = 0; k < 3; ++k)
@@ -432,7 +392,7 @@ int main()
     }
     for (int k = 3; k < 6; ++k)
     {
-      covM(k,k) = pow(resolution / (nHits * sqrt(3)), 2);
+      covM(k,k) = pow(resolution / nHits / sqrt(3), 2);
     }
     // trackrep
     genfit::AbsTrackRep* rep = new genfit::RKTrackRep(pdg);
@@ -452,12 +412,11 @@ int main()
     TMatrixDSym hitCov(2);
     hitCov.UnitMatrix();
     hitCov *=resolution *resolution;
-    //for (int l =0; l<nHits; l++)
-    for (int j = 0; j < 5; j++)
     //for (int j = 0; j < nHits; j++)
+    for (int j = 0; j < 6; j++)
     {
       //pick the hit positions
-      TVector3 cPos(hitX[i][j] * 0.1 , hitY[i][j] * 0.1  , hitZ[i][j] * 0.1 );
+      TVector3 cPos(hitX[i][j]/ 10. , hitY[i][j] / 10.  , hitZ[i][j] / 10. );
       //double cPer = cPos.Perp() ; 
       if(cPos == TVector3(0.,0.,0.)) continue;
       double phi = cPos.Phi();
@@ -467,7 +426,7 @@ int main()
       TVector3 v = o.Unit();
       TVectorD hitCoords(2);
       hitCoords[0] = cPos.Z();
-      hitCoords[1] = cPos.Perp() - 18.425 ;
+      hitCoords[1] = cPos.Perp() - 18.425;
       //std::cout << "\033[1;32m [Notice] cPos [ " << j << " ]  \033[0m" << std::endl;
       //cPos.Print();
       genfit::PlanarMeasurement * measurement = new genfit::PlanarMeasurement(hitCoords, hitCov, 0., j ,nullptr );
@@ -475,185 +434,138 @@ int main()
       fitTrack.insertPoint(new genfit::TrackPoint(measurement,&fitTrack ));
     }
     
-    //hmomB -> Fill(momMag*1000.); 
-    //check
     // assert(fitTrack.checkConsistency());
     // do the fit
+    fitTrack.checkConsistency();
     fitter->processTrack(&fitTrack);
     display->addEvent(&fitTrack);
     if (i % 100 == 0)
     {
       std::cout << "\033[1;32m [Notice] Fitting track [ " << i << " ] is done. \033[0m" << std::endl;
     }
+
     genfit::TrackPoint* tp = fitTrack.getPointWithMeasurementAndFitterInfo(0, rep);
     if (tp == nullptr) continue;
     //genfit::KalmanFittedStateOnPlane kfsop(*(static_cast<genfit::KalmanFitterInfo*>(tp->getFitterInfo(rep))->getBackwardUpdate()));
-    genfit::KalmanFittedStateOnPlane kfsop(*(static_cast<genfit::KalmanFitterInfo*>(tp->getFitterInfo(rep))->getForwardUpdate()));
-    const TVectorD& referenceState = stateRefOrig.getState();
-    const TVectorD& state = kfsop.getState();
-    const TMatrixDSym covf = kfsop.getCov();
+      genfit::KalmanFittedStateOnPlane kfsop(*(static_cast<genfit::KalmanFitterInfo*>(tp->getFitterInfo(rep))->getForwardUpdate()));
+      const TVectorD& referenceState = stateRefOrig.getState();
+      const TVectorD& state = kfsop.getState();
+      const TMatrixDSym covf = kfsop.getCov();
+    //genfit::FitStatus *fitstat = fitTrack->getFitStatus(rep);
+    //bool fitconv = fitstat->isFitConverged();
+    //double chi2 = fitstat->getChi2();
+    //double NDF = fitstat->getNdf();
+    //fittedTrack->_chi2ndf = chi2/NDF;
     
+    //if(!fitconv)
+    //{
+    //  cout << "Track could not be fitted successfully" << endl;
+    //  delete fittedTrack;
+    //  delete fitTrack;
+    //  continue;
+    //}
+//
+//    //genfit::TrackPoint* tp = fitTrack->getPointWithMeasurementAndFitterInfo(0, rep);
+//    //if(tp==NULL){
+//    //  cout << "Track has no TrackPoint with fitterInfo" << endl;
+//    //  delete fittedTrack;
+//    //  delete fitTrack;
+//    //  continue;
+    //}
+
+
+
+
+
+
 
     //genfit::FitStatus *fitstat = fitTrack.getFitStatus(rep);
     //bool fitconv = fitstat->isFitConverged();
     //if(!fitconv)
     //{
-      //cout << "Track could not be fitted successfully" << endl;
+    //  //cout << "Track could not be fitted successfully" << endl;
     //  continue;
     //}
 
-    double momInit = (1./referenceState[0])*1000.; 
-    double momFitted = (1./state[0])*1000.; 
-    double momDiff = momInit - momFitted; 
-    double momRes = (momInit - momFitted) / momInit;
-    
-    hmomResAll -> Fill(  momRes );
-    hmomDiffAll-> Fill( momDiff );
-    
+    momInit = (1./referenceState[0]) *  1000.; 
+    momFitted = (1./state[0]) * 1000.; 
+    momDiff = momInit - momFitted; 
+    momRes = (momInit - momFitted) / momInit;
+    tr -> Fill();
+    hmomResAllTest -> Fill(  momRes );
+    hmomDiffAllTest-> Fill( momDiff );
     if (abs(momFitted) > 200 && abs(momFitted) < 275)
     {  
-      hmomResMomCut -> Fill(  momRes );
-      hmomDiffMomCut ->Fill( momDiff);
+      hmomResMomCutTest -> Fill(  momRes );
+      hmomDiffMomCutTest ->Fill( momDiff);
 
       if (abs(momRes) < 0.2 )
       {
-        hmomResCut -> Fill(momRes);
+        hmomResCutTest -> Fill(momRes);
       }
       if (abs(momDiff) < 0.2 * momInit)
       {
-        hmomDiffCut -> Fill(momDiff);
+        hmomDiffCutTest -> Fill(momDiff);
       }
     }
+  
+    double cutR  = 0.2;
 
-    //tr -> Fill();
-    //double cutR  = 0.2;
-    //
-    //for (int j = 0; j < window; j ++)
-    //{
-    //  if (j * windowRange < momMag &&  momMag < (j+1) * windowRange)
-    //  {
-    //    hmomRes[j]-> Fill( ((1./state[0]) - (1./referenceState[0] )) / (1./referenceState[0]));
-    //    hmomDiff[j]-> Fill(  (1./state[0])*1000. - (1./referenceState[0] )*1000.);
-    //    momSig[j] = hmomDiff[j] ->GetStdDev();
-    //    double trueNTemp = 0.;
-    //    double resTemp = 0.;
-    //    resTemp = (( ( (1./state[0]) - (1./referenceState[0] )) / (1./referenceState[0])));
-    //    double resMTemp = abs(resTemp);
-    //    posiNum[j] = hmomRes[j] -> GetEntries();
-    //    if(resMTemp < cutR )
-    //    {
-    //      hmomResCut[j]-> Fill( ((1./state[0]) - (1./referenceState[0] )) / (1./referenceState[0]));
-    //      hmomDiffCut[j]-> Fill(  (1./state[0])*1000. - (1./referenceState[0] )*1000.);
-    //      double fittedNTemp = 0.;
-    //      fittedNTemp = hmomResCut[j] ->GetEntries();
-    //      posiNumFit[j] = fittedNTemp;
-    //      Eff[j] = (fittedNTemp / trueNTemp) * 100.;
-    //    }
-    //  }
-    //}
+    for (int j = 0; j < window; j ++)
+    {
+      if (j * windowRange < abs(momFitted) &&  abs(momFitted) < (j+1) * windowRange)
+      {
+        hmomRes[j]-> Fill( ((1./state[0]) - (1./referenceState[0] )) / (1./referenceState[0]));
+        hmomDiff[j]-> Fill(  (1./state[0])*1000. - (1./referenceState[0] )*1000.);
+        momSig[j] = hmomDiff[j] ->GetStdDev();
+        double trueNTemp = 0.;
+        double resTemp = 0.;
+        resTemp = (( ( (1./state[0]) - (1./referenceState[0] )) / (1./referenceState[0])));
+        double resMTemp = abs(resTemp);
+        posiNum[j] = hmomRes[j] -> GetEntries();
+        if(resMTemp < cutR )
+        {
+          hmomResCut[j]-> Fill( ((1./state[0]) - (1./referenceState[0] )) / (1./referenceState[0]));
+          hmomDiffCut[j]-> Fill(  (1./state[0])*1000. - (1./referenceState[0] )*1000.);
+          double fittedNTemp = 0.;
+          fittedNTemp = hmomResCut[j] ->GetEntries();
+          posiNumFit[j] = fittedNTemp;
+          Eff[j] = (fittedNTemp / trueNTemp) * 100.;
+        }
+      }
+    }
   }
 
+  f ->cd();
+  tr->Write(); 
+  f ->Close();
+
   delete fitter;
-  //f ->cd();
-  //tr->Write(); 
-  //f ->Close();
-  ////Drawing Momentum Resolution
   TCanvas* c1 = new TCanvas();
   c1 -> Divide(2,3); 
-  //c6 -> cd(1);
-  //hmomDiffAll->Draw();
-  ////hmomDiffAll->Fit("gaus");
   c1 -> cd(1);
-  hmomResAll->Draw();
+  hmomResAllTest->Draw();
   c1 -> cd(2);
-  hmomDiffAll->Draw();
+  hmomDiffAllTest->Draw();
   c1 -> cd(3);
-  hmomResMomCut -> Draw();
+  hmomResMomCutTest -> Draw();
   c1 -> cd(4);
-  hmomDiffMomCut -> Draw();
+  hmomDiffMomCutTest -> Draw();
   c1 -> cd(5);
-  hmomResCut ->Draw();
+  hmomResCutTest ->Draw();
   c1 -> cd(6);
-  hmomDiffCut ->Draw();
-
-  ////Drawing pval, ndf, chi2 , ch2/ndf
-  //TCanvas* c8 = new TCanvas();
-  //c8 -> Divide(2,2);
-  //c8 -> cd(1);
-  //pVal -> Draw();
-  //c8 -> cd(2);
-  //chI2 -> Draw();
-  //c8 -> cd(3);
-  //Ndf -> Draw();
-  //c8 -> cd(4);
-  //chI2N ->Draw();
-  //TCanvas* c12 = new TCanvas();
-  //c12 -> SetGrid();
-  //TEfficiency * fEff = new TEfficiency("eff", "Fitting Efficiency",12,0.,300.);
-  //double y[12] = {Eff25 , Eff50 , Eff75 , Eff100 , Eff125 , Eff150 , Eff175 , Eff200 , Eff225 , Eff250 , Eff275 , Eff300};
-  //double Nt[12] = {Nt25 , Nt50 , Nt75 , Nt100 , Nt125 , Nt150 , Nt175 , Nt200 , Nt225 , Nt250 , Nt275 , Nt300};
-  //double Nf[12] = {Nf25 , Nf50 , Nf75 , Nf100 , Nf125 , Nf150 , Nf175 , Nf200 , Nf225 , Nf250 , Nf275 , Nf300};
-  //double x[12]  ;
-  //double ex[12] ;
-  //double ey[12] ;
-  //for (int i =0; i < 12 ; i++)
-  //{
-  //  x[i] = 25. * (i+1) - 12.5;
-  //  ex[i] = 12.5;
-  //  ey[i] = y[i]* TMath::Sqrt( ( 1 / Nf[i] ) + ( 1/ Nt[i]) );
-  //}
-  //auto Eff = new TGraphErrors(12,x,y,ex,ey);
-  //Eff ->SetTitle("Efficiency");
-  //Eff -> SetPointError( 25. , 0.);
-  //Eff -> SetMarkerColor(2);
-  //Eff ->GetXaxis() ->SetTitle("p_{initial} [MeV/c]");
-  //Eff ->GetYaxis() ->SetTitle("Efficiency [%]");
-  //Eff -> Draw("AP");
-  //TCanvas* c14 = new TCanvas();
-  //c14 -> SetGrid();
-  //hmomResO200 ->GetXaxis() ->SetTitle("Momentum resolution");
-  //hmomResO200 ->GetYaxis() ->SetTitle("# of Track(positron)");
-  //hmomResO200 ->Draw();
-  //TCanvas* c20 = new TCanvas();
-  //c20 -> SetGrid();
-  //double sig[12] = {momSig25 , momSig50 , momSig75 , momSig100 , momSig125 , momSig150 , momSig175 , momSig200 , momSig225 , momSig250 , momSig275 , momSig300};
-  //double eSig[12] ;
-  //double eMomSig[12];
-  //for (int i =0; i < 12 ; i++)
-  //{
-  //  x[i] = 25. * (i+1) - 12.5;
-  //  eMomSig[i] = sig[i] / x[i];
-  //  eSig[i] = eMomSig[i]* TMath::Sqrt( 1/ Nt[i] );
-  //}
-  //auto mSig = new TGraphErrors(12 , x , eMomSig , ex , eSig);
-  //mSig ->SetTitle("Performance");
-  //mSig -> SetPointError( 25. , 0.);
-  //mSig -> SetMarkerColor(2);
-  //mSig ->GetXaxis() ->SetTitle("p_{initial} [MeV/c]");
-  //mSig ->GetYaxis() ->SetTitle("#sigma_{p} / p_{initial}");
-  //mSig -> Draw("AP");
-  //// csv start 
-  //{
-  //  double * xE;
-  //  double * yE;
-  //  ofstream csv("Efficiency.csv");
-  //  int nEff = Eff -> GetN();
-  //  csv  << "Efficiency" << endl;
-  //  for(Int_t i = 0; i < nEff ; i++)
-  //  {
-  //    xE = Eff -> GetX();
-  //    yE = Eff -> GetY();
-  //    csv << xE[i] << "," << yE[i] << endl;
-  //  }
-  //  csv << "Efficiency, 200MeV/c < p_{initial < 275MeV/c}" << endl;
-  //  csv << EffO200 << endl;
-  //  csv << "# of positrons" << endl;
-  //  csv << "~25"<< "," << "~50" << "," << "50~75" << ","<< "75~100" << ","<< "100~125" << ","<< "125~150" << ","<< "150~175" << ","<< "175~200" << ","<< "200~225" << ","<< "225~250" << ","<< "250~275" << ","<< "275~300" << endl;
-  //  csv << Nt25 << Nt50 << "," << Nt75 << "," << Nt100 << "," << Nt125 << "," << Nt150 << "," << Nt175 << "," << Nt200 << "," << Nt225 << "," << Nt250 << "," <<  Nt275 << "," << Nt300 << endl;  
-  //  csv.close();
-  //}
-   /// ////////////////////////////////////////////////CSV is done/////////////////////////////////////////////////////////
+  hmomDiffCutTest ->Draw();
+  
+  TCanvas* c2 = new TCanvas();
+  c2 -> Divide(5,5);
+  for (int k=0; k < 10; k ++)
+  {
+    c2 -> cd(k);
+    hmomRes[k] -> Draw();
+  }
+  
   display->setOptions("ABDEFHMPT"); // G show geometry
-  //if (matFX) display->setOptions("ABDEFGHMPT"); // G show geometry
   display->open();
+
+
 }

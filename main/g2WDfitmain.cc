@@ -116,25 +116,27 @@ int main()
   // init MeasurementCreator
   genfit::MeasurementCreator measurementCreator;
   // init geometry and mag. field
-  TString fileData = "/home/wdlee/ssd1/work/build/sysg2wd_build/g2wd.root";
+  TString fileData = "/home/wdlee/ssd1/work/build/sysg2wd_build/g2wd100k.root";
+  //TString fileData = "./testOut10k.root";
   TString fileGeom = "/home/wdlee/ssd1/work/build/sysg2wd_build/g2wdGeom.gdml";
+  //TString fileGeom = "./Detector.root";
   new TGeoManager("Geometry", "Geane geometry");
   TGeoManager::Import(fileGeom.Data());
   genfit::FieldManager::getInstance()->init(new genfit::ConstField(0.,0., BZ)); // BZ kGauss
   genfit::MaterialEffects::getInstance()->init(new genfit::TGeoMaterialInterface());
-  //genfit::MaterialEffects *mateff = genfit::MaterialEffects::getInstance();
-  //mateff->setEnergyLossBrems(true);
-  //mateff->setNoiseBrems(true);
-  //mateff->setEnergyLossBetheBloch(true);
-  //mateff->setNoiseBetheBloch(true);
-  //mateff->setNoiseCoulomb(true);
-  //genfit::MaterialEffects::getInstance()->init(new genfit::TGeoMaterialInterface());
+  genfit::MaterialEffects *mateff = genfit::MaterialEffects::getInstance();
+  mateff->setEnergyLossBrems(true);
+  mateff->setNoiseBrems(true);
+  mateff->setEnergyLossBetheBloch(true);
+  mateff->setNoiseBetheBloch(true);
+  mateff->setNoiseCoulomb(true);
+  genfit::MaterialEffects::getInstance()->init(new genfit::TGeoMaterialInterface());
   // init event display
   genfit::EventDisplay* display = genfit::EventDisplay::getInstance();
   // init fitter
-  genfit::AbsKalmanFitter* fitter = new genfit::KalmanFitterRefTrack();
+  //genfit::AbsKalmanFitter* fitter = new genfit::KalmanFitterRefTrack();
   //genfit::AbsKalmanFitter* fitter = new genfit::KalmanFitter();
-  //genfit::AbsKalmanFitter* fitter = new genfit::DAF();
+  genfit::AbsKalmanFitter* fitter = new genfit::DAF();
   //genfit::AbsKalmanFitter* fitter = new genfit::DAF(true, 1e-3, 1e-3);
   //const genfit::eFitterType fitter = genfit::DafRef;
   //const genfit::eFitterType fitterId = genfit::DafSimple;
@@ -150,20 +152,20 @@ int main()
   //const genfit::eMultipleMeasurementHandling mmHandling = genfit::weightedClosestToReferenceWire;
   //const genfit::eMultipleMeasurementHandling mmHandling = genfit::weightedClosestToPredictionWire;
   fitter->setMultipleMeasurementHandling(mmHandling);
-  //double dPVal(1.E-3);
-  //double  dRelChi2(0.2);
+  double dPVal(1.E-3);
+  double  dRelChi2(0.2);
   //double  dChi2Ref(1.);
-  //double  nMinIter(3);
-  //double  nMaxIter(100);
-  //int nMaxFailed(-1);
+  double  nMinIter(3);
+  double  nMaxIter(100);
+  int nMaxFailed(-1);
   //bool refit(false);
   //bool  squareRootFormalism(false);
-  //fitter->setMinIterations(nMinIter);
-  //fitter->setMaxIterations(nMaxIter);
-  //fitter->setRelChi2Change(dRelChi2);
-  //fitter->setMaxFailedHits(nMaxFailed);
+  fitter->setMinIterations(nMinIter);
+  fitter->setMaxIterations(nMaxIter);
+  fitter->setRelChi2Change(dRelChi2);
+  fitter->setMaxFailedHits(nMaxFailed);
 
-  //const bool debug =  true; //false;
+  const bool debug =  true; //false;
   //if (debug)
   //fitter->setDebugLvl(10);
   // create histograms
@@ -360,14 +362,14 @@ int main()
     }
   }
   int trackN = hitX.size();
-  //for (int i = 0; i < 10; i++)
-  //{
-  //  //std::cout << "\033[1;37m [Notice] Track [ " << i << " ]  \033[0m" << std::endl;
-  //  for (int j = 0; j < hitX[i].size(); j++)
-  //  {
-  //    //std::cout << "\033[1;36m [Notice] hit  [ " << hitX[i][j] <<", " <<  hitY[i][j] << "," << hitZ[i][j]  << " ]  \033[0m" << std::endl;
-  //  }
-  //}
+  for (int i = 0; i < 10; i++)
+  {
+    std::cout << "\033[1;37m [Notice] Track [ " << i << " ]  \033[0m" << std::endl;
+    for (int j = 0; j < hitX[i].size(); j++)
+    {
+      std::cout << "\033[1;36m [Notice] hit  [ " << hitX[i][j] <<", " <<  hitY[i][j] << "," << hitZ[i][j]  << " ]  \033[0m" << std::endl;
+    }
+  }
   
   // Looping over entries
   std::cout << "\033[1;31m [Notice] " << trackN << " number of Tracks. \033[0m" << std::endl;
@@ -382,17 +384,19 @@ int main()
     //chekc the real Hit number ;
     //set the initial state(for Kalman filter step 0) Units: cm / GeV/c
     //std::cout << "\033[1;35m [Notice] Initial Condition [ " << i << " ] is being fitted. \033[0m" << std::endl;
-    TVector3 pos( hitX[i][1] / 10.  , hitY[i][1] / 10.    , hitZ[i][1] / 10.  );
-    TVector3 mom( momX[i][1] / 1000. , momY[i][1] / 1000.  , momZ[i][1] / 1000. );
+    TVector3 pos( hitX[i][0] * 0.1  , hitY[i][0] * 0.1    , hitZ[i][0] * 0.1  );
+    TVector3 mom( momX[i][0] *0.001 , momY[i][0] *0.001  , momZ[i][0] * 0.001 );
     //pos.Print();
-    //mom.Print();
+    //if (mom.Mag()*1000 < 200. | mom.Mag()*1000 > 275.) continue; 
+    std::cout << "\033[1;32m [Notice] momMag [ " << mom.Mag() * 1000 << " ] MeV/c \033[0m" << std::endl;
     //Calculate the Magnitude of Initial momentum - will be use in Momentum cutting
     double momMag = mom.Mag();
     //mom.Print();
     const int pdg = pdgWanted ;     // particle pdg
-    const double charge = TDatabasePDG::Instance()->GetParticle(pdg)->Charge()/(3.);
-    genfit::HelixTrackModel* helix = new genfit::HelixTrackModel(pos, mom, charge);
-    measurementCreator.setTrackModel(helix);
+    //const double charge = TDatabasePDG::Instance()->GetParticle(pdg)->Charge()/(3.);
+    //const double charge = TDatabasePDG::Instance()->GetParticle(pdg)->Charge();
+    //genfit::HelixTrackModel* helix = new genfit::HelixTrackModel(pos, mom, charge);
+    //measurementCreator.setTrackModel(helix);
     //get the charge : why devide by 3? - Curious(from Dasilva) 
     //const double charge = TDatabasePDG::Instance()->GetParticle(pdg)->Charge()/(3.);
     //std::cout << "charge  = " << charge << std::endl;
@@ -404,8 +408,8 @@ int main()
     const double momSmear = 0.019;     // rad
     //const double momMagSmear = 0.019;   // relative
     //hmomshit -> Fill( momMag* 1000. , countHits);
-    TVector3 posM(pos);
-    TVector3 momM(mom);
+    TVector3 posM = pos;
+    TVector3 momM = mom;
     if (smearPosMom)
     {
       posM.SetX(gRandom->Gaus(posM.X(),posSmear));
@@ -428,7 +432,7 @@ int main()
     }
     for (int k = 3; k < 6; ++k)
     {
-      covM(k,k) = pow(resolution / nHits / sqrt(3), 2);
+      covM(k,k) = pow(resolution / (nHits * sqrt(3)), 2);
     }
     // trackrep
     genfit::AbsTrackRep* rep = new genfit::RKTrackRep(pdg);
@@ -449,10 +453,11 @@ int main()
     hitCov.UnitMatrix();
     hitCov *=resolution *resolution;
     //for (int l =0; l<nHits; l++)
-    for (int j = 1; j < nHits; j++)
+    for (int j = 0; j < 5; j++)
+    //for (int j = 0; j < nHits; j++)
     {
       //pick the hit positions
-      TVector3 cPos(hitX[i][j]/ 10. , hitY[i][j] / 10.  , hitZ[i][j] / 10. );
+      TVector3 cPos(hitX[i][j] * 0.1 , hitY[i][j] * 0.1  , hitZ[i][j] * 0.1 );
       //double cPer = cPos.Perp() ; 
       if(cPos == TVector3(0.,0.,0.)) continue;
       double phi = cPos.Phi();
@@ -462,7 +467,7 @@ int main()
       TVector3 v = o.Unit();
       TVectorD hitCoords(2);
       hitCoords[0] = cPos.Z();
-      hitCoords[1] = cPos.Perp() - 18.425;
+      hitCoords[1] = cPos.Perp() - 18.425 ;
       //std::cout << "\033[1;32m [Notice] cPos [ " << j << " ]  \033[0m" << std::endl;
       //cPos.Print();
       genfit::PlanarMeasurement * measurement = new genfit::PlanarMeasurement(hitCoords, hitCov, 0., j ,nullptr );
@@ -474,7 +479,6 @@ int main()
     //check
     // assert(fitTrack.checkConsistency());
     // do the fit
-    fitTrack.checkConsistency();
     fitter->processTrack(&fitTrack);
     display->addEvent(&fitTrack);
     if (i % 100 == 0)
@@ -489,39 +493,12 @@ int main()
     const TVectorD& state = kfsop.getState();
     const TMatrixDSym covf = kfsop.getCov();
     
-    //genfit::FitStatus *fitstat = fitTrack->getFitStatus(rep);
-    //bool fitconv = fitstat->isFitConverged();
-    //double chi2 = fitstat->getChi2();
-    //double NDF = fitstat->getNdf();
-    //fittedTrack->_chi2ndf = chi2/NDF;
-    
-    //if(!fitconv)
-    //{
-    //  cout << "Track could not be fitted successfully" << endl;
-    //  delete fittedTrack;
-    //  delete fitTrack;
-    //  continue;
-    //}
-//
-//    //genfit::TrackPoint* tp = fitTrack->getPointWithMeasurementAndFitterInfo(0, rep);
-//    //if(tp==NULL){
-//    //  cout << "Track has no TrackPoint with fitterInfo" << endl;
-//    //  delete fittedTrack;
-//    //  delete fitTrack;
-//    //  continue;
-    //}
-
-
-
-
-
-
 
     //genfit::FitStatus *fitstat = fitTrack.getFitStatus(rep);
     //bool fitconv = fitstat->isFitConverged();
     //if(!fitconv)
     //{
-    //  //cout << "Track could not be fitted successfully" << endl;
+      //cout << "Track could not be fitted successfully" << endl;
     //  continue;
     //}
 
@@ -533,7 +510,7 @@ int main()
     hmomResAll -> Fill(  momRes );
     hmomDiffAll-> Fill( momDiff );
     
-    if (abs(momInit) > 200 && abs(momInit) < 275)
+    if (abs(momFitted) > 200 && abs(momFitted) < 275)
     {  
       hmomResMomCut -> Fill(  momRes );
       hmomDiffMomCut ->Fill( momDiff);
@@ -547,6 +524,7 @@ int main()
         hmomDiffCut -> Fill(momDiff);
       }
     }
+
     //tr -> Fill();
     //double cutR  = 0.2;
     //

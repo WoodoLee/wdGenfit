@@ -116,8 +116,8 @@ int main()
   // init MeasurementCreator
   genfit::MeasurementCreator measurementCreator;
   // init geometry and mag. field
-  TString fileData = "/home/wdlee/Work/build/geant4/g2wdsys_build/g2wd.root";
-  TString fileGeom = "/home/wdlee/Work/build/geant4/g2wdsys_build/g2wdGeom.gdml";
+  TString fileData = "/home/wdlee/ssd1/work/build/sysg2wd_build/g2wd100k.root";
+  TString fileGeom = "/home/wdlee/ssd1/work/build/sysg2wd_build/g2wdGeom.gdml";
   new TGeoManager("Geometry", "Geane geometry");
   TGeoManager::Import(fileGeom.Data());
   genfit::FieldManager::getInstance()->init(new genfit::ConstField(0.,0., BZ)); // BZ kGauss
@@ -171,55 +171,59 @@ int main()
   //gROOT->SetStyle("Plain");
   //gStyle->SetPalette(1);
   //gStyle->SetOptFit(1111);
-  int nbin1 =150; //500
-  double mRr = 1;
-  double mDr = 300;
-  TH1D *hmomResAllTest     = new TH1D("All","Momentum Resolution",nbin1, -mRr , mRr);
-  TH1D *hmomResMomCutTest  = new TH1D("Momcut","Momentum Resolution momCut",nbin1, -mRr , mRr);
-  TH1D *hmomResCutTest     = new TH1D("ResCut","Momentum Resolution Cut",nbin1, -mRr , mRr);
-  TH1D *hmomDiffAllTest    = new TH1D("All","Momentum Difference",nbin1, -mDr , mDr);
-  TH1D *hmomDiffMomCutTest = new TH1D("MomCut","Momentum Difference momCut",nbin1, -mDr , mDr);
-  TH1D *hmomDiffCutTest    = new TH1D("DiffCut","Momentum Difference Cut",nbin1, -mDr , mDr);
+  //int nbin1 =150; //500
+  //double mRr = 1;
+  //double mDr = 300;
+  //TH1D *hmomResAllTest     = new TH1D("All","Momentum Resolution",nbin1, -mRr , mRr);
+  //TH1D *hmomResMomCutTest  = new TH1D("Momcut","Momentum Resolution momCut",nbin1, -mRr , mRr);
+  //TH1D *hmomResCutTest     = new TH1D("ResCut","Momentum Resolution Cut",nbin1, -mRr , mRr);
+  //TH1D *hmomDiffAllTest    = new TH1D("All","Momentum Difference",nbin1, -mDr , mDr);
+  //TH1D *hmomDiffMomCutTest = new TH1D("MomCut","Momentum Difference momCut",nbin1, -mDr , mDr);
+  //TH1D *hmomDiffCutTest    = new TH1D("DiffCut","Momentum Difference Cut",nbin1, -mDr , mDr);
   
-  double momRange = 300.;
-  int window = 100;
-  double windowRange = momRange / window;
-  TH1D *hmomRes[window];
-  TH1D *hmomResCut[window];
-  TH1D *hmomDiff[window];
-  TH1D *hmomDiffCut[window];
-  TH1D *hmomSig[window];
-  TString name;
-  TString title;
+  //double momRange = 300.;
+  //int window = 100;
+  //double windowRange = momRange / window;
+  //TH1D *hmomRes[window];
+  //TH1D *hmomResCut[window];
+  //TH1D *hmomDiff[window];
+  //TH1D *hmomDiffCut[window];
+  //TH1D *hmomSig[window];
+  //TString name;
+  //TString title;
   
-  for(int i=0; i < window; i++)
-  {
-    double rangeMin = i *  windowRange ;
-    double rangeMax = (i+1) * windowRange ;
-    title . Form("%i MeV < P_{Initial} < %i + 3 MeV/c", rangeMin);
-    hmomRes[i]     = new TH1D(title . Data() , "Momentum Resolution",nbin1, -mRr , mRr);
-    hmomResCut[i]  = new TH1D(title . Data() , "Momentum Resolution Cut",nbin1, -mRr , mRr);
-    hmomDiff[i]    = new TH1D(title . Data() , "Momentum Difference",nbin1, -mDr , mDr);
-    hmomDiffCut[i] = new TH1D(title . Data() , "Momentum Difference Cut",nbin1, -mDr , mDr);
-    hmomSig[i]     = new TH1D(title . Data() , "Momentum Difference / true Momentum",nbin1, -mDr , mDr);
-  }
+  //for(int i=0; i < window; i++)
+  //{
+  //  double rangeMin = i *  windowRange ;
+  //  double rangeMax = (i+1) * windowRange ;
+  //  title . Form("%i MeV < P_{Initial} < %i + 3 MeV/c", rangeMin);
+  //  hmomRes[i]     = new TH1D(title . Data() , "Momentum Resolution",nbin1, -mRr , mRr);
+  //  hmomResCut[i]  = new TH1D(title . Data() , "Momentum Resolution Cut",nbin1, -mRr , mRr);
+  //  hmomDiff[i]    = new TH1D(title . Data() , "Momentum Difference",nbin1, -mDr , mDr);
+  //  hmomDiffCut[i] = new TH1D(title . Data() , "Momentum Difference Cut",nbin1, -mDr , mDr);
+  //  hmomSig[i]     = new TH1D(title . Data() , "Momentum Difference / true Momentum",nbin1, -mDr , mDr);
+  //}
  
-  double Eff[window];
-  double EffO200 = 0.;
-  double posiNum[window];
-  double posiNumAll = 0.;
-  double posiNumFit[window];
-  double momSig[window];
+  //double Eff[window];
+  //double EffO200 = 0.;
+  //double posiNum[window];
+  //double posiNumAll = 0.;
+  //double posiNumFit[window];
+  //double momSig[window];
 
   TFile* f = new TFile("FittingResult.root","recreate");
   TTree *tr= new TTree("data", "data");
   
   double momInit, momFitted , momDiff, momRes;
-  
+  double firstHitX, firstHitY, firstHitZ, firstHitT; 
   tr -> Branch ("momInit",  &momInit , "momInit/D");
   tr -> Branch ("momFitted" ,  &momFitted  , "momFittied/D");
   tr -> Branch ("momDiff" ,  &momDiff  , "momDiff/D");
   tr -> Branch ("momRes" ,  &momRes  , "momRes/D");
+  tr -> Branch ("firstHitX" ,  &firstHitX , "firstHitX/D");
+  tr -> Branch ("firstHitY" ,  &firstHitY , "firstHitY/D");
+  tr -> Branch ("firstHitZ" ,  &firstHitZ , "firstHitZ/D");
+  tr -> Branch ("firstHitT" ,  &firstHitT , "firstHitT/D");
   
   TFile* file = new TFile(fileData.Data());
   std::cout << "\033[1;32m [Notice] File " << fileData.Data() << " is open.\033[0m" << std::endl;
@@ -346,8 +350,13 @@ int main()
     //chekc the real Hit number ;
     //set the initial state(for Kalman filter step 0) Units: cm / GeV/c
     //std::cout << "\033[1;35m [Notice] Initial Condition [ " << i << " ] is being fitted. \033[0m" << std::endl;
-    TVector3 pos( hitX[i][0] / 10.  , hitY[i][0] / 10.    , hitZ[i][1] / 10.  );
-    TVector3 mom( momX[i][0] / 1000. , momY[i][0] / 1000.  , momZ[i][1] / 1000. );
+    TVector3 pos( hitX[i][0] / 10.  , hitY[i][0] / 10.    , hitZ[i][0] / 10.  );
+    TVector3 mom( momX[i][0] / 1000. , momY[i][0] / 1000.  , momZ[i][0] / 1000. );
+    
+    firstHitX = hitX[i][0];
+    firstHitY = hitY[i][0];
+    firstHitZ = hitZ[i][0];
+    firstHitT = hitT[i][0];
     //pos.Print();
     //mom.Print();
     //Calculate the Magnitude of Initial momentum - will be use in Momentum cutting
@@ -492,48 +501,47 @@ int main()
     momDiff = momInit - momFitted; 
     momRes = (momInit - momFitted) / momInit;
     tr -> Fill();
-    hmomResAllTest -> Fill(  momRes );
-    hmomDiffAllTest-> Fill( momDiff );
-    if (abs(momFitted) > 200 && abs(momFitted) < 275)
-    {  
-      hmomResMomCutTest -> Fill(  momRes );
-      hmomDiffMomCutTest ->Fill( momDiff);
-
-      if (abs(momRes) < 0.2 )
-      {
-        hmomResCutTest -> Fill(momRes);
-      }
-      if (abs(momDiff) < 0.2 * momInit)
-      {
-        hmomDiffCutTest -> Fill(momDiff);
-      }
-    }
+    //hmomResAllTest -> Fill(  momRes );
+    //hmomDiffAllTest-> Fill( momDiff );
+    //if (abs(momFitted) > 200 && abs(momFitted) < 275)
+    //{  
+    //  hmomResMomCutTest -> Fill(  momRes );
+    //  hmomDiffMomCutTest ->Fill( momDiff);
+//
+//    //  if (abs(momRes) < 0.2 )
+//    //  {
+//    //    hmomResCutTest -> Fill(momRes);
+//    //  }
+//    //  if (abs(momDiff) < 0.2 * momInit)
+//    //  {
+//    //    hmomDiffCutTest -> Fill(momDiff);
+//    //  }
+    //}
   
-    double cutR  = 0.2;
-
-    for (int j = 0; j < window; j ++)
-    {
-      if (j * windowRange < abs(momFitted) &&  abs(momFitted) < (j+1) * windowRange)
-      {
-        hmomRes[j]-> Fill( ((1./state[0]) - (1./referenceState[0] )) / (1./referenceState[0]));
-        hmomDiff[j]-> Fill(  (1./state[0])*1000. - (1./referenceState[0] )*1000.);
-        momSig[j] = hmomDiff[j] ->GetStdDev();
-        double trueNTemp = 0.;
-        double resTemp = 0.;
-        resTemp = (( ( (1./state[0]) - (1./referenceState[0] )) / (1./referenceState[0])));
-        double resMTemp = abs(resTemp);
-        posiNum[j] = hmomRes[j] -> GetEntries();
-        if(resMTemp < cutR )
-        {
-          hmomResCut[j]-> Fill( ((1./state[0]) - (1./referenceState[0] )) / (1./referenceState[0]));
-          hmomDiffCut[j]-> Fill(  (1./state[0])*1000. - (1./referenceState[0] )*1000.);
-          double fittedNTemp = 0.;
-          fittedNTemp = hmomResCut[j] ->GetEntries();
-          posiNumFit[j] = fittedNTemp;
-          Eff[j] = (fittedNTemp / trueNTemp) * 100.;
-        }
-      }
-    }
+    //double cutR  = 0.2;
+    //for (int j = 0; j < window; j ++)
+    //{
+    //  if (j * windowRange < abs(momFitted) &&  abs(momFitted) < (j+1) * windowRange)
+    //  {
+    //    hmomRes[j]-> Fill( ((1./state[0]) - (1./referenceState[0] )) / (1./referenceState[0]));
+    //    hmomDiff[j]-> Fill(  (1./state[0])*1000. - (1./referenceState[0] )*1000.);
+    //    momSig[j] = hmomDiff[j] ->GetStdDev();
+    //    double trueNTemp = 0.;
+    //    double resTemp = 0.;
+    //    resTemp = (( ( (1./state[0]) - (1./referenceState[0] )) / (1./referenceState[0])));
+    //    double resMTemp = abs(resTemp);
+    //    posiNum[j] = hmomRes[j] -> GetEntries();
+    //    if(resMTemp < cutR )
+    //    {
+    //      hmomResCut[j]-> Fill( ((1./state[0]) - (1./referenceState[0] )) / (1./referenceState[0]));
+    //      hmomDiffCut[j]-> Fill(  (1./state[0])*1000. - (1./referenceState[0] )*1000.);
+    //      double fittedNTemp = 0.;
+    //      fittedNTemp = hmomResCut[j] ->GetEntries();
+    //      posiNumFit[j] = fittedNTemp;
+    //      Eff[j] = (fittedNTemp / trueNTemp) * 100.;
+    //    }
+    //  }
+    //}
   }
 
   f ->cd();
@@ -541,28 +549,28 @@ int main()
   f ->Close();
 
   delete fitter;
-  TCanvas* c1 = new TCanvas();
-  c1 -> Divide(2,3); 
-  c1 -> cd(1);
-  hmomResAllTest->Draw();
-  c1 -> cd(2);
-  hmomDiffAllTest->Draw();
-  c1 -> cd(3);
-  hmomResMomCutTest -> Draw();
-  c1 -> cd(4);
-  hmomDiffMomCutTest -> Draw();
-  c1 -> cd(5);
-  hmomResCutTest ->Draw();
-  c1 -> cd(6);
-  hmomDiffCutTest ->Draw();
+  //TCanvas* c1 = new TCanvas();
+  //c1 -> Divide(2,3); 
+  //c1 -> cd(1);
+  //hmomResAllTest->Draw();
+  //c1 -> cd(2);
+  //hmomDiffAllTest->Draw();
+  //c1 -> cd(3);
+  //hmomResMomCutTest -> Draw();
+  //c1 -> cd(4);
+  //hmomDiffMomCutTest -> Draw();
+  //c1 -> cd(5);
+  //hmomResCutTest ->Draw();
+  //c1 -> cd(6);
+  //hmomDiffCutTest ->Draw();
   
-  TCanvas* c2 = new TCanvas();
-  c2 -> Divide(5,5);
-  for (int k=0; k < 10; k ++)
-  {
-    c2 -> cd(k);
-    hmomRes[k] -> Draw();
-  }
+  //TCanvas* c2 = new TCanvas();
+  //c2 -> Divide(5,5);
+  //for (int k=0; k < 10; k ++)
+  //{
+  //  c2 -> cd(k);
+  //  hmomRes[k] -> Draw();
+  //}
   
   display->setOptions("ABDEFHMPT"); // G show geometry
   display->open();

@@ -116,8 +116,8 @@ int main()
   // init MeasurementCreator
   genfit::MeasurementCreator measurementCreator;
   // init geometry and mag. field
-  TString fileData = "/home/wdlee/ssd1/work/build/sysg2wd_build/g2wd100k.root";
-  TString fileGeom = "/home/wdlee/ssd1/work/build/sysg2wd_build/g2wdGeom.gdml";
+  TString fileData = "/home/wdlee/Work/build/geant4/g2wdsys_build/g2wd1M.root";
+  TString fileGeom = "/home/wdlee/Work/build/geant4/g2wdsys_build/g2wdGeom.gdml";
   new TGeoManager("Geometry", "Geane geometry");
   TGeoManager::Import(fileGeom.Data());
   genfit::FieldManager::getInstance()->init(new genfit::ConstField(0.,0., BZ)); // BZ kGauss
@@ -163,54 +163,6 @@ int main()
   fitter->setRelChi2Change(dRelChi2);
   fitter->setMaxFailedHits(nMaxFailed);
 
-
-  //const bool debug =  true; //false;
-  //if (debug)
-  //fitter->setDebugLvl(10);
-  // create histograms
-  //gROOT->SetStyle("Plain");
-  //gStyle->SetPalette(1);
-  //gStyle->SetOptFit(1111);
-  //int nbin1 =150; //500
-  //double mRr = 1;
-  //double mDr = 300;
-  //TH1D *hmomResAllTest     = new TH1D("All","Momentum Resolution",nbin1, -mRr , mRr);
-  //TH1D *hmomResMomCutTest  = new TH1D("Momcut","Momentum Resolution momCut",nbin1, -mRr , mRr);
-  //TH1D *hmomResCutTest     = new TH1D("ResCut","Momentum Resolution Cut",nbin1, -mRr , mRr);
-  //TH1D *hmomDiffAllTest    = new TH1D("All","Momentum Difference",nbin1, -mDr , mDr);
-  //TH1D *hmomDiffMomCutTest = new TH1D("MomCut","Momentum Difference momCut",nbin1, -mDr , mDr);
-  //TH1D *hmomDiffCutTest    = new TH1D("DiffCut","Momentum Difference Cut",nbin1, -mDr , mDr);
-  
-  //double momRange = 300.;
-  //int window = 100;
-  //double windowRange = momRange / window;
-  //TH1D *hmomRes[window];
-  //TH1D *hmomResCut[window];
-  //TH1D *hmomDiff[window];
-  //TH1D *hmomDiffCut[window];
-  //TH1D *hmomSig[window];
-  //TString name;
-  //TString title;
-  
-  //for(int i=0; i < window; i++)
-  //{
-  //  double rangeMin = i *  windowRange ;
-  //  double rangeMax = (i+1) * windowRange ;
-  //  title . Form("%i MeV < P_{Initial} < %i + 3 MeV/c", rangeMin);
-  //  hmomRes[i]     = new TH1D(title . Data() , "Momentum Resolution",nbin1, -mRr , mRr);
-  //  hmomResCut[i]  = new TH1D(title . Data() , "Momentum Resolution Cut",nbin1, -mRr , mRr);
-  //  hmomDiff[i]    = new TH1D(title . Data() , "Momentum Difference",nbin1, -mDr , mDr);
-  //  hmomDiffCut[i] = new TH1D(title . Data() , "Momentum Difference Cut",nbin1, -mDr , mDr);
-  //  hmomSig[i]     = new TH1D(title . Data() , "Momentum Difference / true Momentum",nbin1, -mDr , mDr);
-  //}
- 
-  //double Eff[window];
-  //double EffO200 = 0.;
-  //double posiNum[window];
-  //double posiNumAll = 0.;
-  //double posiNumFit[window];
-  //double momSig[window];
-
   TFile* f = new TFile("FittingResult.root","recreate");
   TTree *tr= new TTree("data", "data");
   
@@ -227,6 +179,7 @@ int main()
   
   TFile* file = new TFile(fileData.Data());
   std::cout << "\033[1;32m [Notice] File " << fileData.Data() << " is open.\033[0m" << std::endl;
+  
   TTree *treeHit = (TTree*)(file->Get("Hit"));
   int hitEventID;
   double hitTime;
@@ -275,6 +228,7 @@ int main()
   int postEid;
   int eIDhit = treeHit -> GetEntries();
   std::cout << "\033[1;32m [Notice] " << eIDhit << " number of Entries. \033[0m" << std::endl;
+  
   for (int i = 0; i < eIDhit; i++)
   {
     //std::cout << "\033[1;32m [Notice] event [ " << i << " ] is being fitted \033[0m" << std::endl;
@@ -447,7 +401,7 @@ int main()
     // do the fit
     fitTrack.checkConsistency();
     fitter->processTrack(&fitTrack);
-    display->addEvent(&fitTrack);
+    //display->addEvent(&fitTrack);
     if (i % 100 == 0)
     {
       std::cout << "\033[1;32m [Notice] Fitting track [ " << i << " ] is done. \033[0m" << std::endl;
@@ -501,7 +455,7 @@ int main()
     momDiff = momInit - momFitted; 
     momRes = (momInit - momFitted) / momInit;
     tr -> Fill();
-    //hmomResAllTest -> Fill(  momRes );
+     //hmomResAllTest -> Fill(  momRes );
     //hmomDiffAllTest-> Fill( momDiff );
     //if (abs(momFitted) > 200 && abs(momFitted) < 275)
     //{  
@@ -542,12 +496,12 @@ int main()
     //    }
     //  }
     //}
+ 
   }
-
-  f ->cd();
-  tr->Write(); 
-  f ->Close();
-
+  f  -> cd();
+  tr -> Write();   
+  f  -> Close();
+  
   delete fitter;
   //TCanvas* c1 = new TCanvas();
   //c1 -> Divide(2,3); 
@@ -572,8 +526,8 @@ int main()
   //  hmomRes[k] -> Draw();
   //}
   
-  display->setOptions("ABDEFHMPT"); // G show geometry
-  display->open();
+  //display->setOptions("ABDEFHMPT"); // G show geometry
+  //display->open();
 
 
 }

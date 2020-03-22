@@ -116,8 +116,13 @@ int main()
   // init MeasurementCreator
   genfit::MeasurementCreator measurementCreator;
   // init geometry and mag. field
+<<<<<<< HEAD
   TString fileData = "/home/wdlee/Work/build/geant4/g2wdsys_build/g2wd1M.root";
   TString fileGeom = "/home/wdlee/Work/build/geant4/g2wdsys_build/g2wdGeom.gdml";
+=======
+  TString fileData = "/home/wdlee/Work/build/geant4/g2wdPGsys_build/g2wd.root";
+  TString fileGeom = "/home/wdlee/Work/build/geant4/g2wdPGsys_build/g2wdGeom.gdml";
+>>>>>>> 90c36bf1128719ca813d626dfe0794dc56ad372a
   new TGeoManager("Geometry", "Geane geometry");
   TGeoManager::Import(fileGeom.Data());
   genfit::FieldManager::getInstance()->init(new genfit::ConstField(0.,0., BZ)); // BZ kGauss

@@ -104,8 +104,10 @@ using namespace ROOT::Math;
 using namespace std;
 using namespace genfit;
 using namespace RooFit;
-int main()
+int main(int argc, char* argv[] )
 {
+  
+  int argHits = atoi(argv[3]);
   //Conditions
   double BZ = 30.;
   const int pdgWanted  = -11;  // particle pdg code -11 = positron
@@ -116,13 +118,10 @@ int main()
   // init MeasurementCreator
   genfit::MeasurementCreator measurementCreator;
   // init geometry and mag. field
-<<<<<<< HEAD
-  TString fileData = "/home/wdlee/Work/build/geant4/g2wdsys_build/g2wd1M.root";
-  TString fileGeom = "/home/wdlee/Work/build/geant4/g2wdsys_build/g2wdGeom.gdml";
-=======
-  TString fileData = "/home/wdlee/Work/build/geant4/g2wdPGsys_build/g2wd.root";
-  TString fileGeom = "/home/wdlee/Work/build/geant4/g2wdPGsys_build/g2wdGeom.gdml";
->>>>>>> 90c36bf1128719ca813d626dfe0794dc56ad372a
+  TChain *T  = new TChain("Hit");
+  T -> Add(argv[1]);
+  //TString fileGeom = "/raid01/wdlee/data/g4data/sysError/dp/tdrValue/g2wdGeom.gdml";
+  TString fileGeom = argv[4];
   new TGeoManager("Geometry", "Geane geometry");
   TGeoManager::Import(fileGeom.Data());
   genfit::FieldManager::getInstance()->init(new genfit::ConstField(0.,0., BZ)); // BZ kGauss
@@ -134,7 +133,7 @@ int main()
   mateff->setNoiseCoulomb(true);
   genfit::MaterialEffects::getInstance()->init(new genfit::TGeoMaterialInterface());
   // init event display
-  genfit::EventDisplay* display = genfit::EventDisplay::getInstance();
+  //genfit::EventDisplay* display = genfit::EventDisplay::getInstance();
   // init fitter
   //genfit::AbsKalmanFitter* fitter = new genfit::KalmanFitterRefTrack();
   //genfit::AbsKalmanFitter* fitter = new genfit::KalmanFitter();
@@ -168,7 +167,7 @@ int main()
   fitter->setRelChi2Change(dRelChi2);
   fitter->setMaxFailedHits(nMaxFailed);
 
-  TFile* f = new TFile("FittingResult.root","recreate");
+  TFile* f = new TFile(argv[2],"recreate");
   TTree *tr= new TTree("data", "data");
   
   double momInit, momFitted , momDiff, momRes;
@@ -182,10 +181,10 @@ int main()
   tr -> Branch ("firstHitZ" ,  &firstHitZ , "firstHitZ/D");
   tr -> Branch ("firstHitT" ,  &firstHitT , "firstHitT/D");
   
-  TFile* file = new TFile(fileData.Data());
-  std::cout << "\033[1;32m [Notice] File " << fileData.Data() << " is open.\033[0m" << std::endl;
+  //TFile* file = new TFile(fileData.Data());
+  //std::cout << "\033[1;32m [Notice] File " << fileData.Data() << " is open.\033[0m" << std::endl;
   
-  TTree *treeHit = (TTree*)(file->Get("Hit"));
+  //TTree *treeHit = (TTree*)(file->Get("Hit"));
   int hitEventID;
   double hitTime;
   double hitPosX,hitPosY, hitPosZ;
@@ -196,18 +195,35 @@ int main()
   double eDep;
   double hitAngle;
   double VolID;
-  treeHit -> SetBranchAddress("hitEventID",&hitEventID);
-  treeHit -> SetBranchAddress("hitTime",&hitTime);
-  treeHit -> SetBranchAddress("hitPosX",&hitPosX);
-  treeHit -> SetBranchAddress("hitPosY",&hitPosY);
-  treeHit -> SetBranchAddress("hitPosZ",&hitPosZ);
-  treeHit -> SetBranchAddress("hitPX",&hitPX);
-  treeHit -> SetBranchAddress("hitPY",&hitPY);
-  treeHit -> SetBranchAddress("hitPZ",&hitPZ);
-  treeHit -> SetBranchAddress("hitPMag",&hitPMag);
-  treeHit -> SetBranchAddress("hitAngle",&hitAngle);
-  treeHit -> SetBranchAddress("eDep",&eDep);
-  treeHit -> SetBranchAddress("VolID",&VolID);
+  //treeHit -> SetBranchAddress("hitEventID",&hitEventID);
+  //treeHit -> SetBranchAddress("hitTime",&hitTime);
+  //treeHit -> SetBranchAddress("hitPosX",&hitPosX);
+  //treeHit -> SetBranchAddress("hitPosY",&hitPosY);
+  //treeHit -> SetBranchAddress("hitPosZ",&hitPosZ);
+  //treeHit -> SetBranchAddress("hitPX",&hitPX);
+  //treeHit -> SetBranchAddress("hitPY",&hitPY);
+  //treeHit -> SetBranchAddress("hitPZ",&hitPZ);
+  //treeHit -> SetBranchAddress("hitPMag",&hitPMag);
+  //treeHit -> SetBranchAddress("hitAngle",&hitAngle);
+  //treeHit -> SetBranchAddress("eDep",&eDep);
+  //treeHit -> SetBranchAddress("VolID",&VolID);
+  
+  T -> SetBranchAddress("hitEventID",&hitEventID);
+  T -> SetBranchAddress("hitTime",&hitTime);
+  T -> SetBranchAddress("hitPosX",&hitPosX);
+  T -> SetBranchAddress("hitPosY",&hitPosY);
+  T -> SetBranchAddress("hitPosZ",&hitPosZ);
+  T -> SetBranchAddress("hitPX",&hitPX);
+  T -> SetBranchAddress("hitPY",&hitPY);
+  T -> SetBranchAddress("hitPZ",&hitPZ);
+  T -> SetBranchAddress("hitPMag",&hitPMag);
+  T -> SetBranchAddress("hitAngle",&hitAngle);
+  T -> SetBranchAddress("eDep",&eDep);
+  T -> SetBranchAddress("VolID",&VolID);
+  
+
+
+
   vector < vector <double> > hitT;
   vector < vector <double> > hitX;
   vector < vector <double> > hitY;
@@ -231,13 +247,15 @@ int main()
   vector <double> momZTemp;
   int preEid ;
   int postEid;
-  int eIDhit = treeHit -> GetEntries();
+  //int eIDhit = treeHit -> GetEntries();
+  int eIDhit = T -> GetEntries();
   std::cout << "\033[1;32m [Notice] " << eIDhit << " number of Entries. \033[0m" << std::endl;
   
   for (int i = 0; i < eIDhit; i++)
   {
     //std::cout << "\033[1;32m [Notice] event [ " << i << " ] is being fitted \033[0m" << std::endl;
-    treeHit -> GetEntry(i);
+    //treeHit -> GetEntry(i);
+    T -> GetEntry(i);
     preEid = hitEventID;
     hitTTemp.push_back(hitTime);
     hitXTemp.push_back(hitPosX);
@@ -246,7 +264,8 @@ int main()
     momXTemp.push_back(hitPX);
     momYTemp.push_back(hitPY);
     momZTemp.push_back(hitPZ);
-    treeHit -> GetEntry(i+1);
+    //treeHit -> GetEntry(i+1);
+    T -> GetEntry(i+1);
     postEid = hitEventID;
     //cout << "preEid = " << preEid << endl;
     //cout << "postEid = " << postEid << endl;
@@ -380,8 +399,7 @@ int main()
     TMatrixDSym hitCov(2);
     hitCov.UnitMatrix();
     hitCov *=resolution *resolution;
-    //for (int j = 0; j < nHits; j++)
-    for (int j = 0; j < 6; j++)
+    for (int j = 0; j < argHits ; j++)
     {
       //pick the hit positions
       TVector3 cPos(hitX[i][j]/ 10. , hitY[i][j] / 10.  , hitZ[i][j] / 10. );
